@@ -21,14 +21,14 @@ move_robot(Path,c):-
 		(
 			(L =:= 2;L =:= 3),
 			last(Path, Xl:Yl),
-			retract(robot_at(Xr,Yr,ID)),
-			assert(robot_at(Xl,Yl,ID))
+			retract(robot_at(Xr,Yr,IDr)),
+			assert(robot_at(Xl,Yl,IDr))
 		);
 		(
 			L > 3,
 			nth0(2,Path, Xl:Yl),
-			retract(robot_at(Xr,Yr,ID)),
-			assert(robot_at(Xl,Yl,ID))
+			retract(robot_at(Xr,Yr,IDr)),
+			assert(robot_at(Xl,Yl,IDr))
 		)
 	).
 move_robot(Path,y):-

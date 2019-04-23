@@ -7,17 +7,18 @@ get_line_first(L,R):-
 	create_first_line_row(L,0,R1),
 	get_line(L,R2),
 	append([R1],[R2],R).
+
 get_cell(X,Y,"|░®░☺░"):-
 	dirty_at(X,Y),
+	robot_at(X,Y,_),
+	children_at(X,Y,_),!.
+get_cell(X,Y,"|® [☺]"):-
+	yard_at(X,Y),
 	robot_at(X,Y,_),
 	children_at(X,Y,_),!.
 get_cell(X,Y,"| [®] "):-
 	yard_at(X,Y),
 	robot_at(X,Y,_),!.
-get_cell(X,Y,"|® [☺]"):-
-	yard_at(X,Y),
-	robot_at(X,Y,_),
-	children_at(X,Y,_),!.
 get_cell(X,Y,"| ® ☺ "):-
 	robot_at(X,Y,_),
 	children_at(X,Y,_),!.
