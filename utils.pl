@@ -102,12 +102,65 @@ find_yard(X,Y):-
 find_yard(X,Y):-
 	find_yard(X,Y).
 
-is_clean(COUNT):-
+out_of_order(X:Y):-
+	children_at(X,Y),
+	not(yard_at(X,Y)).
+
+count_child(X,Y,C):-
+	findall(X1:X2,valid_direction(X,Y,X1,X2),L),
+	aggregate_all(count,children_list(L), C1),
+	C is C1+1.
+
+
+bfs(Gx:Gy, [[Gx:Gy|Visited]|_], Path,y):- 
+	yard_at(Gx,Gy),
+	not(children_at(Gx,Gy)),
+	reverse([Gx:Gy|Visited], Path),!.
+bfs(Gx:Gy, [[Gx:Gy|Visited]|_], Path,c):- 
+	children_at(Gx,Gy),
+	not(yard_at(Gx,Gy)),
+	reverse([Gx:Gy|Visited], Path),!.
+bfs(Gx:Gy, [[Gx:Gy|Visited]|_], Path,d):- 
+	dirty_at(Gx,Gy),
+	reverse([Gx:Gy|Visited], Path),!.
+bfs(Gx:Gy, [Visited|Rest], Path, O) :-                     % take one from front
+    Visited = [Sx:Sy|_],            
+    % Sx:Sy \== Gx:Gy,
+    findall(X:Y,collider(Sx:Sy,X:Y),[T|Extend]),
+    maplist( consed(Visited), [T|Extend], VisitedExtended),      % make many
+    append(Rest, VisitedExtended, UpdatedQueue),       % put them at the end
+    bfs( Gx:Gy, UpdatedQueue, Path, O),!.
+bfs(Gx:Gy, [_|Rest], Path, O):-
+	bfs(Gx:Gy, Rest, Path, O).
+breadth_first(Sx:Sy, Gx:Gy, Path, O):-
+	retractall(visited(_)),
+	assert(visited(Sx:Sy)),
+	bfs( Gx:Gy, [[Sx:Sy]], Path, O).
+
+
+is_clean(Count):-
 	n(N),
 	m(M),
 	TOTAL is N*M,
-	aggregate_all(count, dirty_at(_,_), COUNT),
-	TOTAL*3 div 5 > COUNT.
+	aggregate_all(count, dirty_at(_,_), Count),
+	TOTAL*3 div 5 > Count.
+
+win_game:-
+	robot_at(_,_),
+	aggregate_all(count, out_of_order(_), CountC),
+	CountC =:= 0,
+	is_clean(CountD),
+	CountD =:= 0.
+
+end_game(CURRENT):-
+	t(T),
+	CURRENT1 is T*100,
+	CURRENT =:= CURRENT1.
+
+keep_playing(CURRENT):-
+	not(win_game),
+	not(end_game(CURRENT)),
+	is_clean(_).
 
 initialize_variables:-
 	T is 30,
