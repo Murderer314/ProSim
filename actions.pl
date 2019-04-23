@@ -141,4 +141,33 @@ simulate(CURRENT):-
 	writeln(CURRENT),
 	simulate_agents,
 	CURRENT1 is CURRENT + 1,
-	simulate(CURRENT1).
+	simulate(CURRENT1),!.
+simulate(CURRENT):-
+	win_game,
+	t(T),
+	Pasos is CURRENT mod T,
+	Juego is (CURRENT div T) + 1,
+	concat('Ganaste el juego en ',Pasos,R1),
+	concat(R1,' pasos de juego #',R2),
+	concat(R2,Juego,R3),
+	writeln(R3),!.
+
+simulate(CURRENT):-
+	not(is_clean(_)),
+	t(T),
+	Pasos is CURRENT mod T,
+	Juego is (CURRENT div T) + 1,
+	concat('Perdiste el juego por suciedad en ',Pasos,R1),
+	concat(R1,' pasos de juego #',R2),
+	concat(R2,Juego,R3),
+	writeln(R3),!.
+
+simulate(CURRENT):-
+	end_game(CURRENT),
+	t(T),
+	Pasos is CURRENT mod T,
+	Juego is (CURRENT div T) + 1,
+	concat('Perdiste el juego por tiempo en ',Pasos,R1),
+	concat(R1,' pasos de juego #',R2),
+	concat(R2,Juego,R3),
+	writeln(R3),!.

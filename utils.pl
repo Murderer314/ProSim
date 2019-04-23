@@ -137,6 +137,34 @@ breadth_first(Sx:Sy, Gx:Gy, Path, O):-
 	assert(visited(Sx:Sy)),
 	bfs( Gx:Gy, [[Sx:Sy]], Path, O).
 
+move_robot([Xs:Ys|Path],Mode):-
+	length(Path, L),
+	(
+		(
+			(L =:= 1;L =:= 2),
+			last(Path, Xd:Yd),
+			update_pos(Xs:Ys,Xd:Yd,Mode)
+		);
+		(
+			L > 2,
+			nth1(2,Path, Xd:Yd),
+			update_pos(Xs:Ys,Xd:Yd,Mode)
+		)
+	).
+update_pos(Xs:Ys,Xd:Yd,Mode):-
+	retract(robot_at(Xs,Ys,IDr)),
+	assert(robot_at(Xd,Yd,IDr)),
+	update_element(Xs:Ys,Xd:Yd,Mode).
+
+update_element(Xs:Ys,Xd:Yd,y):-
+	retract(children_at(Xs,Ys,IDc)),
+	assert(children_at(Xd,Yd,IDc)),!.
+update_element(_,_,_).
+
+random_mover(X,Y):-
+	findall(X1:Y1,valid_robot_direction(X,Y,X1,Y1),L),
+	random_member(X1:Y1, L),		
+	update_pos(X:Y,X1:Y1,c).
 
 is_clean(Count):-
 	n(N),
@@ -180,4 +208,4 @@ initialize_variables:-
 	assert(m(M)),
 	assert(d(DIRTY)),
 	assert(o(OBSTACLE)),
-	assert(c(CHILDREN)).
+	assert(c(CHILDREN)),!.

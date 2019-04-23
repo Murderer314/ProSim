@@ -30,27 +30,3 @@ choose_action(X:Y,0,R):-
 	to_clean(R,X:Y),!.
 choose_action(X:Y,_,R):-
 	search_and_catch(R,X:Y),!.
-
-move_robot([Xs:Ys|Path],Mode):-
-	length(Path, L),
-	(
-		(
-			(L =:= 1;L =:= 2),
-			last(Path, Xd:Yd),
-			update_pos(Xs:Ys,Xd:Yd,Mode)
-		);
-		(
-			L > 2,
-			nth1(2,Path, Xd:Yd),
-			update_pos(Xs:Ys,Xd:Yd,Mode)
-		)
-	).
-update_pos(Xs:Ys,Xd:Yd,Mode):-
-	retract(robot_at(Xs,Ys,IDr)),
-	assert(robot_at(Xd,Yd,IDr)),
-	update_element(Xs:Ys,Xd:Yd,Mode).
-
-update_element(Xs:Ys,Xd:Yd,y):-
-	retract(children_at(Xs,Ys,IDc)),
-	assert(children_at(Xd,Yd,IDc)),!.
-update_element(_,_,_).

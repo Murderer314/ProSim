@@ -13,7 +13,8 @@
 :-consult(utils).
 :-consult(myPrint).
 :-consult(actions).
-:-consult(robotZahuis).
+:-consult(robotLeandro).
+% :-consult(robotZahuis).
 % :-include(actions).
 :-debug.
 
