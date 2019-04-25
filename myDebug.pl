@@ -7,7 +7,8 @@ debug_children(R):-
 debug_yard(R):-
 	findall(X:Y,yard_at(X,Y),R).
 
-debug_all(D,O,C,Y):-
+debug_all([D,O,C,Y,[Rx,Ry]]):-
+	robot_at(Rx,Ry),
 	debug_dirty(D),
 	debug_obstacle(O),
 	debug_children(C),

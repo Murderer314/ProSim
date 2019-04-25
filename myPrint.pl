@@ -103,7 +103,12 @@ print_a([H|R]):-
 	print_a(R).
 
 print_aa(R):-
+	fail,
 	get_lines(R),
 	print_a(R),!.
 print_aa(1).
 	% findall(R,print_a(R),L).
+print_aaa(R):-
+	get_lines(R),
+	print_a(R),!.
+	

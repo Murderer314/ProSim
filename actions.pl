@@ -148,7 +148,7 @@ simulate(CURRENT):-
 	Pasos is CURRENT mod T,
 	Juego is (CURRENT div T) + 1,
 	concat('Ganaste el juego en ',Pasos,R1),
-	concat(R1,' pasos de juego #',R2),
+	concat(R1,' pasos del juego #',R2),
 	concat(R2,Juego,R3),
 	writeln(R3),!.
 
@@ -158,7 +158,7 @@ simulate(CURRENT):-
 	Pasos is CURRENT mod T,
 	Juego is (CURRENT div T) + 1,
 	concat('Perdiste el juego por suciedad en ',Pasos,R1),
-	concat(R1,' pasos de juego #',R2),
+	concat(R1,' pasos del juego #',R2),
 	concat(R2,Juego,R3),
 	writeln(R3),!.
 
@@ -167,7 +167,20 @@ simulate(CURRENT):-
 	t(T),
 	Pasos is CURRENT mod T,
 	Juego is (CURRENT div T) + 1,
-	concat('Perdiste el juego por tiempo en ',Pasos,R1),
-	concat(R1,' pasos de juego #',R2),
+	concat('El juego culmino por tiempo en empate, en ',Pasos,R1),
+	concat(R1,' pasos del juego #',R2),
 	concat(R2,Juego,R3),
-	writeln(R3),!.
+	writeln(R3),
+	is_clean(X),
+	n(N),
+	m(M),
+	R is (X*100)/(N*M),
+	nl,
+	write(R),!.
+
+simulate(CURRENT):-
+	writeln(CURRENT),
+	debug_all(A),
+	writeln(A),
+	print_aaa(_),
+	writeln('Error interno. Reviselo!!!'),!.
